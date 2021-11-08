@@ -4,10 +4,12 @@ title:  "iOS TDD in Swift(1)"
 
 ---
 
-如果实际开发中，遇到的最多的两种坏现象：
+我在开发中，会经常遇到的两种坏现象：
 
 - 为了尽快提测，目前大多时候是代码提测后才开始写 Unit Test Case (后边简称 UT)，也就是 QA 和 UT 几乎同时进行，就会出现在写 UT 时发现代码被乱放，需要调整位置，这可能会引起逻辑改动，导致了需要回测，这就浪费了开发和测试更多的时间。
-- 当写完需求再去写 UT，有可能当前是通过的，但如果后边有人在函数里加了不影响 UT 的代码呢，如果没有Test-driven development(后边简称 TDD) 能有效的解决上边两个影响本人效率的问题，能让我写出 testable 和 reasonable 的 code，这就够了。
+- 当写完需求再去写 UT，当前是通过的，但如果后边有人在函数里加了不影响 UT 的代码，这个 Test 覆盖的就不够全面。时间久了就会出现 UT 无法使用被废弃的情况。
+
+Test-driven development(后边简称 TDD) 能有效的解决上边两个影响本人效率的问题，能让我写出 testable 和 reasonable 的 code，这就够了。
 
 ## Section I: Hello, TDD
 
