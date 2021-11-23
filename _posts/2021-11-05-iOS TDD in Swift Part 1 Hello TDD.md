@@ -261,6 +261,197 @@ init(availableFunds: Decimal) {
 
 ##### TDDing addItem
 
+下一循环要添加 <hl>addItem</hl> 用来记录一个物品的花费。像之前一样，首先写一个失败的 test。在之前的 test 下添加以下代码：
+
+```swift
+func testAddItem_oneItem_addsCostToTransactionTotal() {
+  // given
+  let availableFunds = Decimal(100)
+  let sut = CashRegister(availableFunds: availableFunds)
+  
+  let itemCost = Decimal(42)
+  
+  // when
+  sut.addItem(itemCost)
+  
+  // then
+  XCTAssertEqual(sut.transactionTotal, itemCost)
+}
+```
+
+由于你还没有声明 <hl>addItem(_:)</hl> 和 <hl>transactionTotal</hl> ，这个 test 无法编译。
+
+添加属性和函数到 <hl>CashRegister</hl> 修复这个问题。
+
+```swift
+var transactionTotal: Decimal = 0
+```
+
+```swift
+func addItem(_ cost: Decimal) {
+  transactionTotal = cost
+}
+```
+
+这里，直接将 <hl>cost</hl> 赋值给 <hl>transactionTotal</hl>。这明显是不对的。
+
+记住你应该写最少的代码来让一个 test 通过，这个 case，最少的代码是赋值，而不是叠加。
+
+点击 **Play** ，你会看到所有的 tests 通过了，这仅对这一项上是正确的，你完成一个 TDD 循环不代表你做完了，而是完成所有的需求才是。
+
+在这个 case 下，还有一个需求是能给一次交易添加多个物品。做这个前，先需要完成重构。
+
+看了下测试代码，是不是有一些重复的代码：
+
+```swift
+let availableFunds = Decimal(100)
+let sut = CashRegister(availableFunds: availableFunds)
+```
+
+这段代码在 <hl>testInitAvailableFunds</hl> 和 <hl>testAddItem</hl> 都有。为了避免这个，你需要提供一些属性:
+
+```swift
+var availableFunds: Decimal!
+var sut: CashRegister!
+```
+
+就像生产代码一样，你可以定义属性、函数或者类，来重构你的测试代码。有一对特殊的函数来初始化和结束你的 tests ：<hl>setUp()</hl> 和 <hl>tearDown()</hl>
+
+<hl>setUp()</hl>  在每一个 test 函数执行前会被执行，<hl>tearDown()</hl> 在每个函数执行完会被调用。
+
+这俩函数非常适合放一些重复的逻辑，在 test 的属性下添加代码：
+
+```swift
+// 1
+override func setUp() {
+  super.setUp()
+  availableFunds = 100
+  sut = CashRegister(availableFunds: availableFunds)
+}
+
+// 2
+override func tearDown() {
+  availableFunds = nil
+  sut = nil
+  super.tearDown()
+}
+```
+
+
+
+你在 <hl>setUp()</hl> 中设置的属性，需要在  <hl>tearDown</hl> 中释放，如果你不在 <hl>tearDown</hl> 中将 test 的属性置为 nil，那么这些属性的生命周期会超过你需要的范围。
+
+可以将 tests 中的重复的逻辑删除，<hl>testInitAvailableFunds</hl>  的内容：
+
+```swift
+XCTAssertEqual(sut.availableFunds, availableFunds)
+```
+
+<hl>testAddItem_oneItem_addsCostToTransactionTotal()</hl> 的内容：
+
+```swift
+// given
+let itemCost = Decimal(42)
+
+// when
+sut.addItem(itemCost)
+
+// then
+XCTAssertEqual(sut.transactionTotal, itemCost)
+```
+
+通过移动初始化代码到 <hl>setUp()</hl>，代码简单了很多。点击 **Play** 确保所有的 tests 都通过。
+
+完成了重构，那么继续下一个 TDD 循环。
+
+##### TDDing adding two items
+
+<hl>testAddItem_oneItem</hl> 能确保 <hl>addItem(_:)</hl> 添加一个物品通过，但是继续添加无法生效，
+
+添加一个新的 test ：
+
+```swift
+func testAddItem_twoItems_addsCostsToTransactionTotal() {
+  // given
+  let itemCost = Decimal(42)
+  let itemCost2 = Decimal(20)
+  let expectedTotal = itemCost + itemCost2
+  
+  // when
+  sut.addItem(itemCost)
+  sut.addItem(itemCost2)
+  
+  // then
+  XCTAssertEqual(sut.transactionTotal, expectedTotal)
+}
+```
+
+这个 test 调用了 <hl>addItem(_:)</hl>  两次，来验证 <hl>transactionTotal</hl> 是否能累加。
+
+点击 **Play** ，你会看到控制台输出：
+
+```swift
+Test Suite 'CashRegisterTests' started at 2021-11-22 17:40:41.664
+Test Case '-[__lldb_expr_15.CashRegisterTests testAddItem_oneItem_addsCostToTransactionTotal]' started.
+Test Case '-[__lldb_expr_15.CashRegisterTests testAddItem_oneItem_addsCostToTransactionTotal]' passed (0.013 seconds).
+Test Case '-[__lldb_expr_15.CashRegisterTests testAddItem_twoItems_addsCostsToTransactionTotal]' started.
+/CashRegister.playground:59: error: -[__lldb_expr_15.CashRegisterTests testAddItem_twoItems_addsCostsToTransactionTotal] : XCTAssertEqual failed: ("20") is not equal to ("62")
+Test Case '-[__lldb_expr_15.CashRegisterTests testAddItem_twoItems_addsCostsToTransactionTotal]' failed (0.010 seconds).
+Test Case '-[__lldb_expr_15.CashRegisterTests testInitAvailableFunds_setAvailableFunds]' started.
+Test Case '-[__lldb_expr_15.CashRegisterTests testInitAvailableFunds_setAvailableFunds]' passed (0.004 seconds).
+Test Suite 'CashRegisterTests' failed at 2021-11-22 17:40:41.693.
+	 Executed 3 tests, with 1 failure (0 unexpected) in 0.027 (0.029) seconds
+
+```
+
+接下来要做的是将这个 test 通过，<hl>addItem(_:)</hl> 的逻辑改为：
+
+```swift
+transactionTotal += cost
+```
+
+点击 **Play**，所有的 tests 都通过了。
+
+接下来需要重构，是否有重复的逻辑，在两个 test 中都使用了变量 <hl>itemCost</hl> ，将它抽成一个属性。
+
+在 <hl>CashRegisterTests</hl> 的 <hl>availableFunds</hl> 属性下添加：
+
+```swift
+var itemCost: Decimal!
+```
+
+在 <hl>setUp()</hl> 的 <hl>availableFunds</hl> 赋值下添加：
+
+```swift
+itemCost = 42
+```
+
+由于在 <hl>setUp()</hl> 中赋值，所以要在 <hl>tearDown</hl> 置为 nil。在 <hl>tearDown()</hl> 的 <hl>availableFunds</hl> 置空下添加：
+
+```swift
+itemCost = nil
+```
+
+然后删除掉 <hl>testAddItem_oneItem</hl> 和 <hl>testAddItem_twoItems</hl> 中重复的代码：
+
+```swift
+let itemCost = Decimal(42)
+```
+
+此外，还有一行也是重复的：
+
+```
+sut.addItem(itemCost)
+```
+
+应该将它抽到 <hl>setUp()</hl> 么？
+
+记住 <hl>setUp()</hl> 会在每个 test 执行前调用，<hl>testInitAvailableFunds</hl>并不需要调用这个函数。
+
+当你后边继续写其他 TDD 循环，你可能也不需要调用这个函数，所以你不需要将它移到 <hl>setUp()</hl> 中。
+
+重构代码来减少重复逻辑，与其说是一个精准的科学，不如说是一门艺术。只要做到你觉得是最好的方案即可，但是如果需要不要害怕后边要去改变你的决定。
+
 #### 2.6 Challenge
 
 #### 2.7 Key points
