@@ -155,7 +155,7 @@ source .zshrc
 
    ![image-20211126185902646](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126185902646.png?raw=true)
 
-6. 运行 oclint 需要参数，参考一下内容：
+6. 执行 oclint 需要参数，参考以下内容：
 
    ```
    -R=/Users/xxx/Documents/Project/oclint/oclint-xcoderules/rules.dl/Debug --report-type=html -o /Users/xxx/Documents/temp/result.html  /Users/xxx/Documents/Project/oclint/oclint-xcodedriver/OCLintTest.m -- -fmodules -x objective-c -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator15.0.sdk
@@ -173,7 +173,7 @@ source .zshrc
 
    ![image-20211126191435729](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126191435729.png?raw=true)
 
-   添加后可以编译一下，会的到 result.html 。由于检查规则没有输出内容，所以 html 里没有内容。
+   添加后可以编译一下，会得到 result.html。由于检查规则没有输出内容，所以 html 里没有内容。
 
 接下来开发自定义规则。
 
@@ -193,7 +193,7 @@ source .zshrc
 
    ![image-20211126201353072](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126201353072.png?raw=true)
 
-   前面就是它的节点类型，后边能获取到 loc、 name 等属性。节点分为 Decl 和 Stmt（还有一个它的子类 Expr），详细了解可以看[Clang AST 基础学习](https://blog.csdn.net/hatter110/article/details/107282596)
+   前面就是它的节点类型，后边能获取到 loc、 name 等属性。节点分为 Decl 和 Stmt（还有一个它的子类 Expr），详细了解可以看 [Clang AST 基础学习](https://blog.csdn.net/hatter110/article/details/107282596)
 
 4. 根据 ast-dump 代码文件，看节点的特征写出在对应的 visit 代码块里，这里先拿 ObjCInterfaceDecl 举个例子：
 
