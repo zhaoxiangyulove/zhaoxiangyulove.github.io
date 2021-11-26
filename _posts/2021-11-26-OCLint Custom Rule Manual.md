@@ -191,7 +191,9 @@ source .zshrc
 
    会得到结果：
 
-   ![image-20211126201353072](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126201353072.png?raw=true)
+   ![image-20211126201353072](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126201353071.png?raw=true)
+
+   
 
    前面就是它的节点类型，后边能获取到 loc、 name 等属性。节点分为 Decl 和 Stmt（还有一个它的子类 Expr），详细了解可以看 [Clang AST 基础学习](https://blog.csdn.net/hatter110/article/details/107282596)
 
