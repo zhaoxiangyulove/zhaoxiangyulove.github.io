@@ -205,13 +205,13 @@ source .zshrc
    addViolation(node->getBeginLoc(), node->getBeginLoc(), this, "hahahahahhaa");
    ```
 
-   这里是检查到此节点时，进行分析逻辑，如果需要报错则使用 addViolation ，return 表示是否继续扫描。
+   检查到此节点时，进行分析逻辑，如果需要报错则使用 addViolation ，return true 表示继续扫描。
 
 5. 添加一个断点可以看到每一步执行的过程。
 
    ![image-20211126202600580](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126202600580.png?raw=true)
 
-6. 查看 result.html 。
+6. 查看 result.html。
 
    ![image-20211126202736372](https://github.com/zhaoxiangyulove/zhaoxiangyulove.github.io/blob/main/assets/pic/oclint/image-20211126202736372.png?raw=true)
 
