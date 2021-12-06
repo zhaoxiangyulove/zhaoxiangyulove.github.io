@@ -3,6 +3,8 @@ title:  "Dependency injection Part 1"
 toc: true
 ---
 
+---
+
 ### 目标
 
 - 3W（what、why、how）
